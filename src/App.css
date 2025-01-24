@@ -1,0 +1,133 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+.rainbow-col {
+  background: linear-gradient(to top, #2e3192, #662d91, #92278f, #ec008c);
+  /* Add padding and other styles as needed */
+  padding: 1rem;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+#app {
+    width: 100vw;
+    height: 100vh;
+}
+.toggle {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out; /* Smooth transition */
+}
+
+/* On hover, show the element */
+.toggle:hover {
+  opacity: 1;
+}
+.right-bottom {
+    position: fixed; /* Fixed positioning for the chat window */
+    bottom: 20px; /* Space from the bottom */
+    right: 20px; /* Space from the right */
+    padding: 15px; /* Padding inside the chat window */
+    background-color: #f0f8ff; /* Light blue background */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    width: 300px; /* Fixed width */
+    max-height: 400px; /* Maximum height */
+    overflow-y: auto; /* Scrollable if content exceeds max height */
+    font-family: 'Arial', sans-serif; /* Font for better readability */
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.messages {
+    margin-bottom: 10px; /* Space below messages */
+}
+
+    .messages div {
+        margin-bottom: 8px; /* Space between individual messages */
+        padding: 10px; /* Padding for message bubbles */
+        border-radius: 10px; /* Rounded message bubbles */
+        background-color: #e0f7fa; /* Light cyan background for messages */
+        color: #333; /* Dark text color for readability */
+        font-size: 14px; /* Font size for messages */
+        line-height: 1.5; /* Line height for better readability */
+        word-wrap: break-word; /* Ensure long words break to the next line */
+    }
+
+.right-bottom-input {
+    width: calc(100% - 22px); /* Full width minus padding and border */
+    padding: 10px; /* Padding for input */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 5px; /* Rounded corners for input */
+    box-sizing: border-box; /* Include padding and border in width */
+    margin-top: 10px; /* Space above the input */
+    font-size: 14px; /* Font size for input */
+    color: #333; /* Dark text color for input */
+}
+.gradient-edge {
+    stroke: url(#gradient); /* Use gradient from SVG definition */
+    stroke-width: 10px;
+}
+
+.gradient-label {
+    font-size: 14px; /* Adjust size as needed */
+    font-weight: 600; /* Semibold font weight */
+    fill: #333; /* Text color */
+}
+
+.gradient-marker {
+    stroke: none;
+    fill: url(#gradient);
+}
+
+.button-send {
+    border-radius: 5px; /* Rounded corners for the button */
+    padding: 10px; /* Padding for the button */
+    background: linear-gradient(135deg, #6c757d, #343a40); /* Gradient background */
+    border: none; /* Remove default border */
+    color: white; /* Text color */
+    font-size: 16px; /* Font size */
+    font-weight: bold; /* Bold text */
+    text-transform: uppercase; /* Uppercase text */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background 0.3s, transform 0.2s; /* Smooth transition for hover effects */
+    margin-top: 10px; /* Space above the button */
+    width: 100%; /* Full width for the button */
+}
+
+    .button-send:hover {
+        background: linear-gradient(135deg, #5a6268, #212529); /* Darker gradient on hover */
+        transform: scale(1.05); /* Slightly enlarge the button on hover */
+    }
+
+    .button-send:active {
+        transform: scale(0.95); /* Slightly shrink the button when clicked */
+    }
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
