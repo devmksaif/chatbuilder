@@ -48,10 +48,4 @@ jobs:
     - name: Build the React app
       run: npm run build:ci  # Use a custom script for CI builds with env-cmd
 
-    # Step 9: Upload build artifacts (optional)
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      if: always()
-      with:
-        name: build
-        path: build/  # The default output directory for React builds
+  
