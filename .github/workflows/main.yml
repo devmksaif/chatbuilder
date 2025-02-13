@@ -1,34 +1,57 @@
-name: Testing Only
+name: Node.js + React.js CI/CD Pipeline
 
 on:
-  pull_request:
-    branches:
-      - main  # Runs when a PR is opened to the main branch
   push:
     branches:
-      - dev  # Runs when code is pushed to the dev branch
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set Up Node.js (if needed)
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+    # Step 2: Set up Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'  # Specify your Node.js version
+        cache: 'npm'        # Cache npm dependencies for faster builds
 
-      - name: Install Dependencies
-        run: |
-          npm install
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: npm install
 
-      - name: Run Tests
-        run: |
-          npm test
+    # Step 4: Install env-cmd globally (optional)
+    - name: Install env-cmd
+      run: npm install -g env-cmd
 
-      - name: Run Linting (Code Quality Check)
-        run: |
-          npm run lint
+    # Step 5: Run ESLint for linting
+    - name: Run ESLint
+      run: npm run lint  # Ensure you have a "lint" script in package.json
+
+    # Step 6: Check formatting with Prettier
+    - name: Check formatting with Prettier
+      run: npm run format:check  # Ensure you have a "format:check" script in package.json
+
+    # Step 7: Run tests with env-cmd
+    - name: Run tests
+      run: npm run test:ci  # Use a custom script for CI testing with env-cmd
+
+    # Step 8: Build the React app with env-cmd (optional)
+    - name: Build the React app
+      run: npm run build:ci  # Use a custom script for CI builds with env-cmd
+
+    # Step 9: Upload build artifacts (optional)
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: build
+        path: build/  # The default output directory for React builds
