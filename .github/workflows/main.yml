@@ -1,12 +1,15 @@
-name: CI/CD Pipeline
+name: Testing Only
 
 on:
+  pull_request:
+    branches:
+      - main  # Runs when a PR is opened to the main branch
   push:
     branches:
-      - main  # Runs on push to the main branch
+      - dev  # Runs when code is pushed to the dev branch
 
 jobs:
-  build-and-deploy:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,69 +24,11 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install
-          npm run buildname: CI/CD Pipeline
-
-on:
-  push:
-    branches:
-      - main  # Runs on push to the main branch
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Set Up Node.js (if needed)
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install Dependencies
-        run: |
-          npm install
-          npm run build
-          npm install -g env-cmd
 
       - name: Run Tests
-        run: npm test
-
-      - name: Deploy to Server (Using SSH)
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          DEPLOY_DIR: "/var/www/app"
-
         run: |
-          echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key $SERVER_USER@$SERVER_HOST << 'EOF'
-            cd $DEPLOY_DIR
-            git pull origin main
-            npm install
-            npm run build
-            pm2 restart app || systemctl restart app
-          EOF
+          npm test
 
-
-      - name: Run Tests
-        run: npm test
-
-      - name: Deploy to Server (Using SSH)
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          DEPLOY_DIR: "/var/www/app"
-
+      - name: Run Linting (Code Quality Check)
         run: |
-          echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key $SERVER_USER@$SERVER_HOST << 'EOF'
-            cd $DEPLOY_DIR
-            git pull origin main
-            npm install
-            npm run build
-            pm2 restart app || systemctl restart app
-          EOF
+          npm run lint
