@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'  # Cache npm dependencies
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
@@ -49,15 +49,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install env-cmd (optional)
+        run: npm install -g env-cmd
+
       - name: Run tests
-        run: npm test  # Ensure you have a "test" script in package.json
+        run: npm run test:ci  # Ensure you have a "test:ci" script in package.json
 
       - name: Upload test coverage
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: coverage
-          path: coverage/  # Adjust if your tests generate coverage reports
+          path: coverage/
 
   build:
     runs-on: ubuntu-latest
@@ -76,13 +79,13 @@ jobs:
         run: npm install
 
       - name: Build the React app
-        run: npm run build
+        run: npm run build:ci  # Ensure you have a "build:ci" script in package.json
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: build
-          path: build/  # The default output directory for React builds
+          path: build/
 
   deploy-to-dev:
     runs-on: ubuntu-latest
@@ -101,19 +104,19 @@ jobs:
         run: npm install
 
       - name: Build the React app
-        run: npm run build
+        run: npm run build:ci
 
       - name: Check if dev branch exists
         id: check-dev-branch
         run: |
           if git ls-remote --exit-code --heads origin dev; then
-            echo "dev-branch-exists=true" >> $GITHUB_OUTPUT
+            echo "dev-branch-exists=true" >> $GITHUB_ENV
           else
-            echo "dev-branch-exists=false" >> $GITHUB_OUTPUT
+            echo "dev-branch-exists=false" >> $GITHUB_ENV
           fi
 
       - name: Create dev branch if it doesn't exist
-        if: steps.check-dev-branch.outputs.dev-branch-exists == 'false'
+        if: env.dev-branch-exists == 'false'
         run: |
           git checkout -b dev
           git push origin dev
@@ -123,56 +126,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
-          publish_branch: dev  # Deploy to the dev branch
-
-  name: Node.js + React.js CI/CD Pipeline
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-    # Step 1: Checkout the code
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    # Step 2: Set up Node.js
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'  # Specify your Node.js version
-        cache: 'npm'        # Cache npm dependencies for faster builds
-
-    # Step 3: Install dependencies
-    - name: Install dependencies
-      run: npm install
-
-    # Step 4: Install env-cmd globally (optional)
-    - name: Install env-cmd
-      run: npm install -g env-cmd
-
-    # Step 5: Run ESLint for linting
-    - name: Run ESLint
-      run: npm run lint  # Ensure you have a "lint" script in package.json
-
-    # Step 6: Check formatting with Prettier
-    - name: Check formatting with Prettier
-      run: npm run format:check  # Ensure you have a "format:check" script in package.json
-
-    # Step 7: Run tests with env-cmd
-    - name: Run tests
-      run: npm run test:ci  # Use a custom script for CI testing with env-cmd
-
-    # Step 8: Build the React app with env-cmd (optional)
-    - name: Build the React app
-      run: npm run build:ci  # Use a custom script for CI builds with env-cmd
-
-  
+          publish_branch: dev
